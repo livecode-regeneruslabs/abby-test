@@ -43,7 +43,23 @@
 </main>
 
 <!-- HubSpot chat widget — SANDBOX portal 148916891 -->
-<script type="text/javascript" id="hs-script-loader" async defer
-        src="https://js-eu1.hs-scripts.com/148916891.js"></script>
+<!-- HubSpot chat widget — SANDBOX portal 148916891.
+     Self-hosted loader: HubSpot's per-portal loader is served inconsistently from their CDN
+     (stale copies without the chat script). This pinned copy removes that dependency. -->
+<script src="hs-loader.js" async defer></script>
+<script>
+// Safety net for live demos: if the widget has not appeared after 6s, re-inject the loader.
+(function () {
+  var tries = 0;
+  var t = setInterval(function () {
+    if (document.getElementById('hubspot-conversations-iframe')) { clearInterval(t); return; }
+    if (++tries > 4) { clearInterval(t); return; }
+    var s = document.createElement('script');
+    s.src = 'hs-loader.js?retry=' + tries;
+    s.async = true;
+    document.body.appendChild(s);
+  }, 6000);
+})();
+</script>
 </body>
 </html>
